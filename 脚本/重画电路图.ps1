@@ -316,14 +316,14 @@ function Draw-SBNC($g, [float]$x, [float]$topY, [string]$label) {
     $dash = New-DashPen 2
     Draw-RightText $g $label ($x - 22) ($topY + 18) 20 $true
     $g.DrawLine($pen, $x, $topY, $x, $topY + 26)
-    $g.DrawLine($pen, $x, $topY + 26, $x, $topY + 48)
-    $g.DrawLine($pen, $x, $topY + 48, $x + 18, $topY + 48)
-    $g.DrawLine($pen, $x - 18, $topY + 58, $x, $topY + 86)
+    $g.DrawLine($pen, $x, $topY + 26, $x + 18, $topY + 26)
+    $g.DrawLine($pen, $x + 18, $topY + 26, $x + 18, $topY + 48)
+    $g.DrawLine($pen, $x + 18, $topY + 48, $x, $topY + 86)
     $g.DrawLine($pen, $x, $topY + 86, $x, $topY + 126)
     $g.DrawLine($pen, $x - 48, $topY + 54, $x - 36, $topY + 54)
     $g.DrawLine($pen, $x - 48, $topY + 54, $x - 48, $topY + 68)
     $g.DrawLine($pen, $x - 48, $topY + 68, $x - 36, $topY + 68)
-    $g.DrawLine($dash, $x - 36, $topY + 61, $x - 14, $topY + 61)
+    $g.DrawLine($dash, $x - 36, $topY + 61, $x + 8, $topY + 61)
     $pen.Dispose()
     $dash.Dispose()
     return $topY + 126
@@ -1211,22 +1211,32 @@ function Draw-Project2Final() {
     $g.DrawLine($pen, 936, $busBottomY, 1838, $busBottomY)
     Draw-Text $g 'N' 818 1044 26 $true
 
-    $c1 = 1150
-    $c2 = 1430
+    $sbX = 1060
+    $fr1X = 1160
+    $c1 = 1290
+    $c2 = 1490
     $c3 = 1710
     $sbTop = 210
-    $frTop = 350
-    $branchTop = 490
-    $branchBottom = 640
-    $branchSymbolTop = 510
-    $coilTop = 780
+    $commonTop = 330
+    $frTop = 360
+    $fr1SplitTop = 480
+    $branchTop = 520
+    $branchBottom = 670
+    $branchSymbolTop = 540
+    $coilTop = 800
     $ktTop = 620
 
-    $g.DrawLine($pen, $c1, $busTopY, $c1, $sbTop)
-    $y = Draw-SBNC $g $c1 $sbTop 'SB1'
-    $g.DrawLine($pen, $c1, $y, $c1, $frTop)
-    $y = Draw-FRNC $g $c1 $frTop 'FR1'
-    $g.DrawLine($pen, $c1, $y, $c1, $branchTop)
+    $g.DrawLine($pen, $sbX, $busTopY, $sbX, $sbTop)
+    $y = Draw-SBNC $g $sbX $sbTop 'SB1'
+    $g.DrawLine($pen, $sbX, $y, $sbX, $commonTop)
+    $g.DrawLine($pen, $sbX, $commonTop, $c3, $commonTop)
+
+    $g.DrawLine($pen, $fr1X, $commonTop, $fr1X, $frTop)
+    $y = Draw-FRNC $g $fr1X $frTop 'FR1'
+    $g.DrawLine($pen, $fr1X, $y, $fr1X, $fr1SplitTop)
+    $g.DrawLine($pen, $fr1X, $fr1SplitTop, $c2, $fr1SplitTop)
+
+    $g.DrawLine($pen, $c1, $fr1SplitTop, $c1, $branchTop)
     $g.DrawLine($pen, $c1, $branchTop, $c1 + 96, $branchTop)
     $g.DrawLine($pen, $c1, $branchBottom, $c1 + 96, $branchBottom)
     $g.DrawLine($pen, $c1, $branchTop, $c1, $branchSymbolTop)
@@ -1239,22 +1249,14 @@ function Draw-Project2Final() {
     $coil1Bottom = Draw-Coil $g $c1 $coilTop 'KM1'
     $g.DrawLine($pen, $c1, $coil1Bottom, $c1, $busBottomY)
 
-    $g.DrawLine($pen, $c2, $busTopY, $c2, $sbTop)
-    $y = Draw-SBNC $g $c2 $sbTop 'SB1'
-    $g.DrawLine($pen, $c2, $y, $c2, $frTop)
-    $y = Draw-FRNC $g $c2 $frTop 'FR1'
-    $g.DrawLine($pen, $c2, $y, $c2, $branchTop)
+    $g.DrawLine($pen, $c2, $fr1SplitTop, $c2, $branchTop)
     $y = Draw-KMNO $g $c2 $branchTop 'KM1'
     $g.DrawLine($pen, $c2, $y, $c2, $coilTop)
     $coil2Bottom = Draw-TimerCoil $g $c2 $coilTop 'KT1 10s'
     $g.DrawLine($pen, $c2, $coil2Bottom, $c2, $busBottomY)
 
-    $g.DrawLine($pen, $c3, $busTopY, $c3, $sbTop)
-    $y = Draw-SBNC $g $c3 $sbTop 'SB1'
-    $g.DrawLine($pen, $c3, $y, $c3, $frTop)
+    $g.DrawLine($pen, $c3, $commonTop, $c3, $frTop)
     $y = Draw-FRNC $g $c3 $frTop 'FR2'
-    $g.DrawLine($pen, $c3, $y, $c3, $branchTop)
-    $y = Draw-KMNO $g $c3 $branchTop 'KM1'
     $g.DrawLine($pen, $c3, $y, $c3, $ktTop)
     $y = Draw-KTNOClean $g $c3 $ktTop 'KT1'
     $g.DrawLine($pen, $c3, $y, $c3, $coilTop)
